@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../../redux/authSlice'
 import { supabase } from '../../services/supabase'
 
-const navItems = ['Home', 'Sinopse', 'Bastdores']
+const navItems = ['Home']
 
 export default function SuperiorMenu() {
   const dispatch = useDispatch()
@@ -21,9 +21,9 @@ export default function SuperiorMenu() {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex'}}>
       <AppBar component="nav" sx={{ background: '#000' }}>
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: { xs: 'space-between', sm: 'flex-start' }, gap: 2 }}>
           <IconButton color="inherit" aria-label="open drawer" edge="start" sx={{ mr: 2, display: { sm: 'none' } }} >
             <MenuIcon />
           </IconButton>
