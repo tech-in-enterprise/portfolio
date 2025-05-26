@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../../services/supabase'
-import { Box } from '@mui/material'
+import { Box, Link } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
@@ -12,6 +12,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setModalOpen } from '../../redux/authSlice'
 import { favoriteProject, fetchFavorites } from '../../redux/favoritesSlice'
 import { fetchProjects } from '../../redux/projectsSlice'
+import { FaGithub } from "react-icons/fa"
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+
 
 
 export default function ProjectPosterCard() {
@@ -72,27 +75,46 @@ export default function ProjectPosterCard() {
   return (
     <React.Fragment>
       {projects.map((project) => (
-        <Card key={project.id}
-          sx={{ maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', color: '#fff', overflow: 'hidden', position: 'relative' }}>
+        <Card key={project.id} sx={{ maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }}>
           {showText ? (
-            <CardContent sx={{ height: 500, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography sx={{ color: '#000000', fontWeight: 'bold', textAlign: 'center' }}>
-                Conheça os melhores lugares da sua cidade utilizando o concierge virtual.
-              </Typography>
-            </CardContent>
+            <Box sx={{ position:'relative'}}>
+              <HighlightOffIcon  onClick={handleResetInfoClick} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#000000', '&:hover': { color: 'red' } }} />
+              <CardContent sx={{ textAlign: 'center', height: 500, background: '#ff5722'}}>
+                <Typography variant="h6" sx={{ color: '#ffffff', fontWeight: 'bold' }}>
+                  Descrição sobre o projeto
+                </Typography>
+                <Box sx={{ color: '#ffffff', textAlign: 'initial', mt: 2 }}>
+                  <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }} gutterBottom>
+                    Lembra de como é chegar em uma cidade que você não conhece nada?
+                  </Typography>
+                  <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
+                    Sentir que você não conseguiu aproveitar tudo que a cidade havia para oferecer
+                  </Typography>
+                  <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
+                    Agora imagine ter uma ferramenta que facilita sua vida desde o primeiro momento.
+                  </Typography>
+                  <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
+                    Bem, esse é o <span style={{ color: '#000000', fontWeight: 'bold' }}>concierge virtual! </span> Ele traz diversas funcionalidades, tais como:
+                  </Typography>
+                </Box>
+                <Link target="_blank" underline="none" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', position: 'absolute', bottom: 5, right: 5, cursor: 'pointer', color: '#000000', fontWeight: 'bold', transition: 'color 0.3s ease', '&:hover ': { color: '#fff' }, '& svg': { marginRight: 1, transition: 'color 0.3s ease' } }}>
+                  <FaGithub />
+                  <Typography sx={{ fontSize: 12 }}>
+                    Ver código no Github
+                  </Typography>
+                </Link>
+              </CardContent>
+            </Box>
           ) : (
-            <div
-              style={{ height: 500, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-              {videoUrl ? (
+            <div style={{ height: 500, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+              {project.video_url ? (
                 <video autoPlay muted loop width="100%" height="100%" style={{ objectFit: 'cover' }}>
-                  <source src={videoUrl} type="video/mp4" />
+                  <source src={project.video_url} type="video/mp4" />
                   Seu navegador não suporta o elemento de vídeo.
                 </video>
-
               ) : (
                 <Typography sx={{ color: '#000000' }}>Carregando vídeo...</Typography>
               )}
-
             </div>
           )}
 
@@ -124,7 +146,7 @@ export default function ProjectPosterCard() {
             <Button size="large" variant="contained" sx={{ backgroundColor: '#000000', width: '180px' }} onClick={handleInfoClick} >
               Saiba mais
             </Button>
-            <Button size="large" variant="outlined" sx={{ borderColor: '#ff5722', color: '#ff5722', width: '180px' }} onClick={handleResetInfoClick}>
+            <Button size="large" variant="outlined" sx={{ borderColor: '#ff5722', color: '#ff5722', width: '180px' }} onClick={() => window.open('https://conciergevirtual.netlify.app/1', '_blank')}>
               Ver Projeto
             </Button>
           </CardActions>
