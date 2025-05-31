@@ -23,19 +23,24 @@ export default function SuperiorMenu() {
   return (
     <Box sx={{ display: 'flex'}}>
       <AppBar component="nav" sx={{ background: '#000' }}>
-        <Toolbar sx={{ justifyContent: { xs: 'space-between', sm: 'flex-start' }, gap: 2 }}>
+        <Toolbar sx={{ justifyContent: { xs: 'space-between', sm: 'flex-start' }, gap: 0 }}>
           <IconButton color="inherit" aria-label="open drawer" edge="start" sx={{ mr: 2, display: { sm: 'none' } }} >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
             Portfólio
           </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <Box sx={{ display: 'flex', alignItems: 'baseline'}}>
             {navItems.map((item) => (
               <Button key={item} sx={{ color: '#fff' }}>
                 {item}
               </Button>
             ))}
+            {user && (
+              <Typography variant="body1" sx={{ color: '#fff' }}>
+                {user.email || 'Usuário'}
+              </Typography>
+            )}
           </Box>
           {user ? (
             <Button variant="outlined" sx={{ ml: 5, color: '#ff5722', borderColor: '#ff5722' }} onClick={handleLogout} >

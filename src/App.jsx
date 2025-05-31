@@ -5,7 +5,7 @@ import ProjectPosterCard from './components/cards/cards'
 import Title from './components/title/title'
 import { supabase } from './services/supabase'
 import { useDispatch } from 'react-redux'
-import { setUser, logout } from './redux/authSlice'
+import { setUser } from './redux/authSlice'
 import Authentication from './components/Auth/auth'
 
 export default function App() {
@@ -13,27 +13,18 @@ export default function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    async function loadUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (user) {
-        dispatch(setUser(user))
+    const storedUser = localStorage.getItem('authUser')
+    if (storedUser) {
+      dispatch(setUser(JSON.parse(storedUser)))
+    } else {
+      const checkUser = async () => {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          dispatch(setUser(user))
+          localStorage.setItem('authUser', JSON.stringify(user))
+        }
       }
-    }
-
-    loadUser()
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        dispatch(setUser(session.user))
-      } else if (event === 'SIGNED_OUT') {
-        dispatch(logout())
-      }
-    })
-
-    return () => {
-      authListener.subscription.unsubscribe()
+      checkUser()
     }
   }, [dispatch])
 

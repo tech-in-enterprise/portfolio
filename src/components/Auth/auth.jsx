@@ -17,35 +17,38 @@ export default function Authentication() {
     const [error, setError] = useState(null)
 
     const handleSubmit = async () => {
-        setLoading(true)
-        setError('')
-        try {
-            if (isLoginMode) {
-                // Login
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password,
-                })
-                dispatch(setUser(data.user))
-                if (error) throw error
-                alert('Login realizado com sucesso!')
-            } else {
-                // Cadastro
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: { data: { username } },
-                })
-                if (error) throw error
-                alert('Cadastro realizado com sucesso! Verifique seu email para confirmar.')
-            }
-            dispatch(setModalOpen(false))
-        } catch (error) {
-            setError(error.message)
-        } finally {
-            setLoading(false)
-        }
+    setLoading(true)
+    setError('')
+    try {
+      let user
+
+      if (isLoginMode) {
+        // Login
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+        if (error) throw error
+        user = data.user
+      } else {
+        // Cadastro
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { username } },
+        })
+        if (error) throw error
+        user = data.user
+      }
+
+      dispatch(setUser(user));
+      localStorage.setItem('authUser', JSON.stringify(user))
+
+      alert(isLoginMode ? 'Login realizado com sucesso!' : 'Cadastro realizado com sucesso!')
+      dispatch(setModalOpen(false))
+    } catch (error) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
     }
+  }
 
     return (
 
