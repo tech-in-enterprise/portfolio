@@ -15,6 +15,8 @@ import { fetchProjects } from '../../redux/projectsSlice'
 import { FaGithub } from "react-icons/fa"
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import TextField from '@mui/material/TextField'
+import AboutProject from './about-project'
+import ComentsAboutProject from './coments-about-project'
 
 
 
@@ -87,59 +89,9 @@ export default function ProjectPosterCard() {
       {projects.map((project) => (
         <Card key={project.id} sx={{ maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }}>
           {showComments ? (
-            <Box sx={{ position: 'relative', height: 500, background: '#000000' }}>
-              <HighlightOffIcon onClick={handleCloseComments} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#ffffff', '&:hover': { color: '#ff5722' } }} />
-              <CardContent>
-                <Typography variant="h6" sx={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold' }}>
-                  Comentários do Projeto
-                </Typography>
-                <Box sx={{ mt: 2, color: '#ffffff' }}>
-                  <Typography sx={{ fontSize: '14px', mb: 2 }}>
-                    Adicione seus comentários aqui:
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    multiline
-                    rows={4}
-                    placeholder="Escreva seu comentário..."
-                    sx={{ backgroundColor: '#ffffff', borderRadius: 1 }}
-                  />
-                  <Button variant="contained" sx={{ mt: 2, backgroundColor: '#ff5722' }}>
-                    Enviar Comentário
-                  </Button>
-                </Box>
-              </CardContent>
-            </Box>
+           <ComentsAboutProject handleCloseComments={handleCloseComments}/>
           ) : showText ? (
-            <Box sx={{ position: 'relative', height: 500, background: '#000000' }}>
-              <HighlightOffIcon onClick={handleResetInfoClick} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#ffffff', '&:hover': { color: '#ff5722' } }} />
-              <CardContent sx={{ textAlign: 'center' }}>
-                <Typography variant="h6" sx={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold' }}>
-                  Descrição sobre o projeto
-                </Typography>
-                <Box sx={{ color: '#ffffff', textAlign: 'initial', mt: 2 }}>
-                  <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }} gutterBottom>
-                    Lembra de como é chegar em uma cidade que você não conhece nada?
-                  </Typography>
-                  <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
-                    Sentir que você não conseguiu aproveitar tudo que a cidade havia para oferecer
-                  </Typography>
-                  <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
-                    Agora imagine ter uma ferramenta que facilita sua vida desde o primeiro momento.
-                  </Typography>
-                  <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
-                    Bem, esse é o <span style={{ color: '#ff5722', fontWeight: 'bold' }}>concierge virtual! </span> Ele traz diversas funcionalidades, tais como:
-                  </Typography>
-                </Box>
-                <Link target="_blank" underline="none" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', position: 'absolute', bottom: 5, right: 5, cursor: 'pointer', color: '#ffffff', fontWeight: 'bold', transition: 'color 0.3s ease', '&:hover ': { color: '#ff5722' }, '& svg': { marginRight: 1, transition: 'color 0.3s ease' } }}>
-                  <FaGithub />
-                  <Typography sx={{ fontSize: 12 }}>
-                    Ver código no Github
-                  </Typography>
-                </Link>
-              </CardContent>
-            </Box>
+            <AboutProject handleResetInfoClick={handleResetInfoClick} />
           ) : (
             <div style={{ height: 500, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
               {project.video_url ? (

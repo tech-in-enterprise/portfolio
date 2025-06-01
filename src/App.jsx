@@ -29,15 +29,14 @@ export default function App() {
   }, [dispatch])
 
   return (
-    <>
-      <Box>
-        <SuperiorMenu/>
-        <Toolbar/>
-        <Title title="Projetos" />
-        <ProjectPosterCard/>
-        <Authentication/>
-      </Box>
-    </>
+    <Box>
+      <SuperiorMenu />
+      <Toolbar />
+      <Title title="PROJETOS" />
+      <ProjectPosterCard />
+      <Authentication />
+    </Box>
+
   )
 }
 

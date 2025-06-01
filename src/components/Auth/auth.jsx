@@ -17,43 +17,49 @@ export default function Authentication() {
     const [error, setError] = useState(null)
 
     const handleSubmit = async () => {
-    setLoading(true)
-    setError('')
-    try {
-      let user
+        setLoading(true)
+        setError('')
+        try {
+            if (!email || !password || (!isLoginMode && !username)) {
+                setError('Todos os campos são obrigatórios.')
+                setLoading(false)
+                return
+            }
+            
+            let user
 
-      if (isLoginMode) {
-        // Login
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-        if (error) throw error
-        user = data.user
-      } else {
-        // Cadastro
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { data: { username } },
-        })
-        if (error) throw error
-        user = data.user
-      }
+            if (isLoginMode) {
+                // Login
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+                if (error) throw error
+                user = data.user
+            } else {
+                // Cadastro
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { username } },
+                })
+                if (error) throw error
+                user = data.user
+            }
 
-      dispatch(setUser(user));
-      localStorage.setItem('authUser', JSON.stringify(user))
+            dispatch(setUser(user));
+            localStorage.setItem('authUser', JSON.stringify(user))
 
-      alert(isLoginMode ? 'Login realizado com sucesso!' : 'Cadastro realizado com sucesso!')
-      dispatch(setModalOpen(false))
-    } catch (error) {
-      setError(error.message)
-    } finally {
-      setLoading(false)
+            alert(isLoginMode ? 'Login realizado com sucesso!' : 'Cadastro realizado com sucesso!')
+            dispatch(setModalOpen(false))
+        } catch (error) {
+            setError(error.message)
+        } finally {
+            setLoading(false)
+        }
     }
-  }
 
     return (
 
         <Modal open={isModalOpen} onClose={() => dispatch(setModalOpen(false))}>
-            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: { xs: '80%', sm: 400 }, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: 3, maxHeight: '90vh', overflowY: 'auto',}}>
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: { xs: '80%', sm: 400 }, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: 3, maxHeight: '90vh', overflowY: 'auto', }}>
                 <HighlightOffIcon onClick={() => dispatch(setModalOpen(false))} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', '&:hover': { color: 'red' } }} />
                 <Typography variant="h6" component="h2">
                     {isLoginMode ? 'Login' : 'Cadastre-se'}
