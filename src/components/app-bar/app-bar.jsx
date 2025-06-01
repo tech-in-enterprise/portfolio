@@ -21,7 +21,7 @@ import { CiUser } from "react-icons/ci"
 
 
 
-const navItems = ['Home', 'Projetos', 'Sobre mim']
+const navItems = ['Home', 'Projetos', 'Sobre mim', 'Certificados']
 
 export default function SuperiorMenu() {
   const dispatch = useDispatch()
@@ -52,10 +52,6 @@ export default function SuperiorMenu() {
     setMobileOpen(!mobileOpen)
   }
 
-  function capitalizeFirstLetter(string) {
-    if (!string) return ''
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
-  }
 
   // Conteúdo do Drawer exibindo navItems e botão "Sair" apenas em mobile
   const drawerContent = (
@@ -85,7 +81,7 @@ export default function SuperiorMenu() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-            Portfólio
+            PORTFÓLIO
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}>
             {navItems.map((item) => (
@@ -98,7 +94,7 @@ export default function SuperiorMenu() {
               <Box sx={{ display: 'flex', alignItems: 'center', color: '#fff', marginLeft: 2 }} onClick={handleMenuOpen}>
                 <CiUser style={{ color: '#ff5722' }} />
                 <Typography variant="body1" sx={{ cursor: 'pointer', ml:1, '&:hover': { textDecoration: 'underline' } }}>
-                  {capitalizeFirstLetter(user.user_metadata?.username) || 'Usuário'}
+                  {user.user_metadata?.username || 'Usuário'}
                 </Typography>
               </Box>
             )}
@@ -110,7 +106,7 @@ export default function SuperiorMenu() {
             <Box sx={{ display: { xs: 'flex', sm: 'none' }, alignItems: 'center', color: '#fff', ml: 'auto' }}>
               <CiUser style={{ color: '#ff5722' }} />
               <Typography variant="body1" sx={{ ml: 1 }}>
-                {capitalizeFirstLetter(user.user_metadata?.username) || 'Usuário'}
+                {user.user_metadata?.username || 'Usuário'}
               </Typography>
             </Box>
           )}

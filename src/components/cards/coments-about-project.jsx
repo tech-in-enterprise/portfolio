@@ -1,11 +1,11 @@
 import React from 'react'
-import { Box, TextField, Button } from '@mui/material'
+import { Box, Link } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-
-
+import { IoAddCircle } from "react-icons/io5"
+import Tooltip from '@mui/material/Tooltip'
 
 
 export default function ComentsAboutProject({ handleCloseComments }) {
@@ -25,6 +25,11 @@ export default function ComentsAboutProject({ handleCloseComments }) {
                             </Typography>
                         </Box>
                     </CardContent>
+                    <Tooltip title="Adicionar Comentário" arrow>
+                        <Link target="_blank" underline="none" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', position: 'absolute', bottom: 5, right: 5, cursor: 'pointer', color: '#ffffff', fontWeight: 'bold', transition: 'color 0.3s ease', '&:hover ': { color: '#ff5722' }, '& svg': { marginRight: 1, transition: 'color 0.3s ease' } }}>
+                            <IoAddCircle fontSize={32} />
+                        </Link>
+                    </Tooltip>
                 </Box>
             </Card>
 
