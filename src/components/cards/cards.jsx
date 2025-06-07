@@ -39,21 +39,21 @@ export default function ProjectPosterCard() {
   //favoritar caso esteja logado, caso não, vai abrir modal de sigin/login
   const handleFavoriteClick = async (projectId) => {
     if (!user) {
-      dispatch(setModalOpen(true)); // Abre o modal de login se o usuário não estiver autenticado
-      return;
+      dispatch(setModalOpen(true))
+      return
     }
 
     try {
       // Atualiza os favoritos do usuário
-      await dispatch(favoriteProject({ user_id: user.id, project_id: projectId }));
+      await dispatch(favoriteProject({ user_id: user.id, project_id: projectId }))
 
       // Atualiza as listas de projetos e favoritos
-      await dispatch(fetchProjects());
-      await dispatch(fetchFavorites());
+      await dispatch(fetchProjects())
+      await dispatch(fetchFavorites())
     } catch (error) {
-      console.error('Erro ao atualizar favoritos:', error);
+      console.error('Erro ao atualizar favoritos:', error)
     }
-  };
+  }
 
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function ProjectPosterCard() {
           <Grid item xs={12} sm={6} md={4} key={project.id}>
             <Card key={project.id} sx={{ maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }}>
               {showComments ? (
-                <ComentsAboutProject handleCloseComments={handleCloseComments} />
+                <ComentsAboutProject project={project} handleCloseComments={handleCloseComments} />
               ) : showText ? (
                 <AboutProject handleResetInfoClick={handleResetInfoClick} />
               ) : (

@@ -1,54 +1,77 @@
-import React, { useState } from 'react'
-import { Box, Link, TextField, Button, IconButton } from '@mui/material'
+import React, { useState, useEffect } from 'react'
+import { Box, Link, TextField } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { IoAddCircle, IoCheckmarkCircleSharp, IoCloseCircleSharp } from "react-icons/io5"
 import Tooltip from '@mui/material/Tooltip'
+import { useDispatch, useSelector } from 'react-redux'
+import { addComment, getComments } from '../../redux/commentsSlice'
 
-export default function ComentsAboutProject({ handleCloseComments }) {
+
+
+
+export default function ComentsAboutProject({ project, handleCloseComments }) {
+
+    const dispatch = useDispatch()
+    const user = useSelector((state) => state.auth.user)
+    const comments = useSelector((state) => state.comments.comments)
+    const loadingComments = useSelector((state) => state.comments.loading)
+
+    useEffect(() => {
+        if (project?.id) {
+            dispatch(getComments(project.id))
+        }
+    }, [dispatch, project?.id])
+
     const [showCommentBox, setShowCommentBox] = useState(false)
     const [comment, setComment] = useState('')
+    const [loading, setLoading] = useState(false)
 
-    const handleAddComment = () => setShowCommentBox(true)
+    //botão para entrar o componente textfild para adicionar comentário
+    const handleIconAddComment = () => setShowCommentBox(true)
+
+
+    // cancela a entrada de texto no textfild
     const handleCancelComment = () => {
         setComment('')
         setShowCommentBox(false)
     }
+
+    //atualização do estado em que está sofrendo mudança, no caso o textfild
     const handleCommentChange = (e) => setComment(e.target.value)
-    const handleSaveComment = () => {
-        console.log('Comentário:', comment)
-        setComment('')
-        setShowCommentBox(false)
+
+    //tratativa dos dados antes de enviar e depois envio para o banco de dados
+    const handleSaveComment = async () => {
+        if (!comment.trim()) return
+
+        const commentData = {
+            user_id: user.id,
+            project_id: project.id,
+            comment
+        }
+
+        setLoading(true)
+
+        try {
+            await dispatch(addComment(commentData))
+            setComment('')
+            setShowCommentBox(false)
+            console.log('Comentário salvo com sucesso!', commentData)
+        } catch (error) {
+            console.error('Erro ao adicionar comentário:', error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
         <React.Fragment>
             <Card
-                sx={{
-                    maxWidth: 400,
-                    border: '1px solid #ccc',
-                    borderRadius: 3,
-                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#FFFFFF',
-                    overflow: 'hidden',
-                    position: 'relative',
-                }}
-            >
+                sx={{ maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative', }} >
                 <Box sx={{ position: 'relative', height: 500, background: '#121212' }}>
-                    <HighlightOffIcon
-                        onClick={handleCloseComments}
-                        sx={{
-                            position: 'absolute',
-                            top: 5,
-                            right: 5,
-                            fontSize: '1.2rem',
-                            cursor: 'pointer',
-                            color: '#ffffff',
-                            '&:hover': { color: '#ff5722' },
-                        }}
-                    />
+                    <HighlightOffIcon onClick={handleCloseComments} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#ffffff', '&:hover': { color: '#ff5722' }, }} />
                     <CardContent>
                         <Typography variant="h6" sx={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold' }}>
                             Comentários do Projeto
@@ -63,40 +86,43 @@ export default function ComentsAboutProject({ handleCloseComments }) {
                                     placeholder="Escreva seu comentário aqui..."
                                     fullWidth
                                     variant="outlined"
+                                    disabled={loading}
                                     sx={{ mb: 2, background: '#ffffff', borderColor: '#ff5722' }}
                                 />
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-                                    <Typography onClick={handleSaveComment} variant="contained" sx={{ color: '#ffffff', cursor: 'pointer', '&:hover': { color: '#e64a19' }, display: 'flex', alignItems: 'center' }}>
+                                    <Typography onClick={handleSaveComment} variant="contained" sx={{ color: '#ffffff', '&:hover': { color: '#e64a19' }, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                                         <IoCheckmarkCircleSharp style={{ marginRight: 8 }} />
-                                        Salvar
+                                        {loading ? 'Salvando...' : 'Salvar'}
                                     </Typography>
-                                    <Typography onClick={handleSaveComment} variant="contained" sx={{ color: '#ffffff', cursor: 'pointer', '&:hover': { color: '#e64a19' }, display: 'flex', alignItems: 'center' }}>
+                                    <Typography onClick={handleCancelComment} variant="contained" sx={{ color: '#ffffff', '&:hover': { color: '#e64a19' }, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                                         <IoCloseCircleSharp style={{ marginRight: 8 }} />
                                         Cancelar
                                     </Typography>
                                 </Box>
                             </>
                         )}
+                        {!loadingComments && comments.length === 0 && (
+                            <Typography sx={{ color: '#fff', mt: 2 }}>Nenhum comentário ainda.</Typography>
+                        )}
+
+                        {comments.length > 0 && (
+                            <Box sx={{ maxHeight: 200, overflowY: 'auto', mt: 2, mb: 2 }}>
+                                {comments.map((c) => (
+                                    <Box key={c.id} sx={{ mb: 1, p: 1, backgroundColor: '#222', borderRadius: 1 }}>
+                                        <Typography variant="body2" sx={{ color: '#fdb913', fontWeight: 'bold' }}>
+                                            {c.user?.user_metadata?.username || 'Anônimo'}:
+                                        </Typography>
+                                        <Typography variant="body1" sx={{ color: '#fff' }}>
+                                            {c.comment}
+                                        </Typography>
+                                    </Box>
+                                ))}
+                            </Box>
+                        )}
                     </CardContent>
                     {!showCommentBox && (
                         <Tooltip title="Adicionar Comentário" arrow>
-                            <Link
-                                onClick={handleAddComment}
-                                underline="none"
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    position: 'absolute',
-                                    bottom: 5,
-                                    right: 5,
-                                    cursor: 'pointer',
-                                    color: '#ffffff',
-                                    fontWeight: 'bold',
-                                    transition: 'color 0.3s ease',
-                                    '&:hover': { color: '#ff5722' },
-                                    '& svg': { marginRight: 1, transition: 'color 0.3s ease' },
-                                }}
-                            >
+                            <Link onClick={handleIconAddComment} underline="none" sx={{ display: 'flex', alignItems: 'center', position: 'absolute', bottom: 5, right: 5, cursor: 'pointer', color: '#ffffff', fontWeight: 'bold', transition: 'color 0.3s ease', '&:hover': { color: '#ff5722' }, '& svg': { marginRight: 1, transition: 'color 0.3s ease' }, }}>
                                 <IoAddCircle fontSize={32} />
                             </Link>
                         </Tooltip>
