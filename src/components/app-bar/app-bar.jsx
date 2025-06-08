@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
@@ -14,7 +14,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../../redux/authSlice'
+import { fetchUserProfile, logout } from '../../redux/authSlice'
 import { supabase } from '../../services/supabase'
 import { CiUser } from "react-icons/ci"
 
@@ -26,9 +26,19 @@ const navItems = ['Home', 'Projetos', 'Sobre mim', 'Certificados']
 export default function SuperiorMenu() {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.user)
+  const profile = useSelector((state) => state.auth.profile)
+
   const [mobileOpen, setMobileOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  
+
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchUserProfile(user.id))
+    }
+  }, [user?.id, dispatch])
+
 
   //função para fazer logout no sistema
   const handleLogout = async () => {
@@ -94,7 +104,7 @@ export default function SuperiorMenu() {
               <Box sx={{ display: 'flex', alignItems: 'center', color: '#fff', marginLeft: 2 }} onClick={handleMenuOpen}>
                 <CiUser style={{ color: '#ff5722' }} />
                 <Typography variant="body1" sx={{ cursor: 'pointer', ml:1, '&:hover': { textDecoration: 'underline' } }}>
-                  {user.user_metadata?.username || 'Usuário'}
+                  {profile?.username || 'Usuário'}
                 </Typography>
               </Box>
             )}
@@ -106,10 +116,11 @@ export default function SuperiorMenu() {
             <Box sx={{ display: { xs: 'flex', sm: 'none' }, alignItems: 'center', color: '#fff', ml: 'auto' }}>
               <CiUser style={{ color: '#ff5722' }} />
               <Typography variant="body1" sx={{ ml: 1 }}>
-                {user.user_metadata?.username || 'Usuário'}
+                {profile?.username || 'Usuário'}
               </Typography>
             </Box>
           )}
+
           {user ? (
             <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}
               anchorOrigin={{

@@ -56,9 +56,9 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
 
         try {
             await dispatch(addComment(commentData))
+            await dispatch(getComments(project.id))
             setComment('')
             setShowCommentBox(false)
-            console.log('Comentário salvo com sucesso!', commentData)
         } catch (error) {
             console.error('Erro ao adicionar comentário:', error)
         } finally {
@@ -68,8 +68,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
 
     return (
         <React.Fragment>
-            <Card
-                sx={{ maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative', }} >
+            <Card sx={{ maxWidth: 400, height:'100%',  border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative', }} >
                 <Box sx={{ position: 'relative', height: 500, background: '#121212' }}>
                     <HighlightOffIcon onClick={handleCloseComments} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#ffffff', '&:hover': { color: '#ff5722' }, }} />
                     <CardContent>
@@ -106,11 +105,11 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
                         )}
 
                         {comments.length > 0 && (
-                            <Box sx={{ maxHeight: 200, overflowY: 'auto', mt: 2, mb: 2 }}>
+                            <Box sx={{ maxHeight: '100%', overflowY: 'auto', mt: 2, mb: 2 }}>
                                 {comments.map((c) => (
                                     <Box key={c.id} sx={{ mb: 1, p: 1, backgroundColor: '#222', borderRadius: 1 }}>
                                         <Typography variant="body2" sx={{ color: '#fdb913', fontWeight: 'bold' }}>
-                                            {c.user?.user_metadata?.username || 'Anônimo'}:
+                                            {c.profiles?.username || 'Anônimo'}:
                                         </Typography>
                                         <Typography variant="body1" sx={{ color: '#fff' }}>
                                             {c.comment}

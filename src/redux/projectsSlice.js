@@ -11,7 +11,7 @@ export const fetchProjects = createAsyncThunk('projects/fetchProjects', async (_
     }
     const projectsWithFavorites = data.map((project) => ({
       ...project,
-      totalFavorites: project.favorites.length, // Conta o total de favoritos
+      totalFavorites: project.favorites?.length
     }))
     return projectsWithFavorites
   }
