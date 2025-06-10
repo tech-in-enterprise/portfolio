@@ -8,8 +8,9 @@ import { IoAddCircle, IoCheckmarkCircleSharp, IoCloseCircleSharp } from "react-i
 import Tooltip from '@mui/material/Tooltip'
 import { useDispatch, useSelector } from 'react-redux'
 import { addComment, getComments } from '../../redux/commentsSlice'
-
-
+import { setModalOpen } from '../../redux/authSlice'
+import { MdDeleteForever } from "react-icons/md"
+import { RiEditLine } from "react-icons/ri"
 
 
 export default function ComentsAboutProject({ project, handleCloseComments }) {
@@ -29,8 +30,14 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
     const [comment, setComment] = useState('')
     const [loading, setLoading] = useState(false)
 
-    //botão para entrar o componente textfild para adicionar comentário
-    const handleIconAddComment = () => setShowCommentBox(true)
+    //botão para entrar o componente textfild para adicionar comentário caso o haja usuário, se não tiver, abre o modal de login
+    const handleIconAddComment = () => {
+        if (!user) {
+            dispatch(setModalOpen(true)) // Abre o modal de login
+            return
+        }
+        setShowCommentBox(true)
+    }
 
 
     // cancela a entrada de texto no textfild
@@ -68,7 +75,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
 
     return (
         <React.Fragment>
-            <Card sx={{ maxWidth: 400, height:'100%',  border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative', }} >
+            <Card sx={{ maxWidth: 400, height: '100%', border: '1px solid #ccc', borderTopRightRadius: 3, borderTopLeftRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative', }} >
                 <Box sx={{ position: 'relative', height: 500, background: '#121212' }}>
                     <HighlightOffIcon onClick={handleCloseComments} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#ffffff', '&:hover': { color: '#ff5722' }, }} />
                     <CardContent>
@@ -108,12 +115,20 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
                             <Box sx={{ maxHeight: '100%', overflowY: 'auto', mt: 2, mb: 2 }}>
                                 {comments.map((c) => (
                                     <Box key={c.id} sx={{ mb: 1, p: 1, backgroundColor: '#222', borderRadius: 1 }}>
-                                        <Typography variant="body2" sx={{ color: '#fdb913', fontWeight: 'bold' }}>
+                                        <Typography sx={{ color: '#fdb913', fontWeight: 'bold', fontSize: 14 }}>
                                             {c.profiles?.username || 'Anônimo'}:
                                         </Typography>
-                                        <Typography variant="body1" sx={{ color: '#fff' }}>
+                                        <Typography sx={{ color: '#fff', fontSize: 12 }}>
                                             {c.comment}
                                         </Typography>
+                                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, color: '#cdcdcd' }}>
+                                            <Tooltip title="Editar comentário" arrow >
+                                                <RiEditLine style={{ cursor: 'pointer' }} />
+                                            </Tooltip>
+                                            <Tooltip title="Deletar comentário" arrow>
+                                                <MdDeleteForever style={{ cursor: 'pointer' }} />
+                                            </Tooltip>
+                                        </Box>
                                     </Box>
                                 ))}
                             </Box>
