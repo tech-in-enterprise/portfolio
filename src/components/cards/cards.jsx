@@ -9,6 +9,8 @@ import { favoriteProject, fetchFavorites } from '../../redux/favoritesSlice'
 import { fetchProjects } from '../../redux/projectsSlice'
 import AboutProject from './about-project'
 import ComentsAboutProject from './coments-about-project'
+import { fetchCommentsCount } from '../../redux/commentsSlice'
+
 
 
 
@@ -17,18 +19,32 @@ export default function ProjectPosterCard() {
   const [showText, setShowText] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [videoUrl, setVideoUrl] = useState('')
+  const [commentsCount, setCommentsCount] = useState({})
 
   const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.user)
   const projects = useSelector((state) => state.projects.projects)
   const favorites = useSelector(state => state.favorites.items)
 
-
+  // para reenderizar(montar) projetos e favoritos do projetos
   useEffect(() => {
     dispatch(fetchProjects())
     dispatch(fetchFavorites())
   }, [dispatch])
 
+  //para reenderiazr (montar) total de comentários
+  useEffect(() => {
+    async function fetchAllCommentsCount() {
+      const counts = {}
+      for (const project of projects) {
+        const count = await dispatch(fetchCommentsCount(project.id)).unwrap()
+        counts[project.id] = count
+      }
+      setCommentsCount(counts)
+    }
+
+    fetchAllCommentsCount()
+  }, [dispatch, projects])
 
   // Verifica se na lista de favoritos tem o projeto para o usuário logado
   const isFavorite = (projectId) => {
@@ -71,9 +87,15 @@ export default function ProjectPosterCard() {
     fetchVideoUrl()
   }, [])
 
-  const handleInfoClick = () => setShowText(true)
+  const handleInfoClick = () => {
+    setShowText(true)
+    setShowComments(false)
+  }
   const handleResetInfoClick = () => setShowText(false)
-  const handleCommentsClick = () => setShowComments(true)
+  const handleCommentsClick = () => {
+    setShowComments(true)
+    setShowText(false)
+  }
   const handleCloseComments = () => setShowComments(false)
 
   return (
@@ -130,7 +152,12 @@ export default function ProjectPosterCard() {
                         )}
                       </>
                     )}
-                    <IoChatbubbleEllipsesOutline onClick={handleCommentsClick} style={{ color: '#ff5722', fontSize: 20, cursor: 'pointer' }} />
+                    <IoChatbubbleEllipsesOutline onClick={handleCommentsClick} style={{ color: '#ff5722', fontSize: 20, marginRight: 4, cursor: 'pointer', }} />
+                    {commentsCount[project.id] > 0 && (
+                      <Typography variant="body2" sx={{ color: '#000' }}>
+                        {commentsCount[project.id]}
+                      </Typography>
+                    )}
                   </Box>
                 </Box>
                 <Typography variant="body1" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
