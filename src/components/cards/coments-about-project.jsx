@@ -156,10 +156,10 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
                             }} />
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                 <Typography onClick={handleSaveComment} sx={{ color: '#ffffff', '&:hover': { color: '#e64a19' }, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                    <IoIosCheckmarkCircleOutline style={{ marginRight: 8 }} />
+                                    <IoIosCheckmarkCircleOutline size={22} style={{ marginRight: 8 }} />
                                 </Typography>
                                 <Typography onClick={handleCancelComment} sx={{ color: '#ffffff', '&:hover': { color: '#e64a19' }, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                    <IoIosCloseCircleOutline style={{ marginRight: 8 }} />
+                                    <IoIosCloseCircleOutline size={22} style={{ marginRight: 8 }} />
                                 </Typography>
                             </Box>
                         </>
