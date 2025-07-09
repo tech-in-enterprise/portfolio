@@ -47,7 +47,7 @@ export default function AboutProject({ handleResetInfoClick }) {
                             <BiLogoPostgresql title="PostgreSQL" size={32} color="#336791" />
                             <SiAxios title="Axios" size={32} color="#5A29E4" />
                         </Box>
-                        <Link target="_blank" underline="none" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', position: 'absolute', bottom: 5, right: 5, cursor: 'pointer', color: '#ffffff', fontWeight: 'bold', transition: 'color 0.3s ease', '&:hover ': { color: '#ff5722' }, '& svg': { marginRight: 1, transition: 'color 0.3s ease' } }}>
+                        <Link href="https://github.com/tech-in-enterprise/portfolio.git" target="_blank" underline="none" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', position: 'absolute', bottom: 5, right: 5, cursor: 'pointer', color: '#ffffff', fontWeight: 'bold', transition: 'color 0.3s ease', '&:hover ': { color: '#ff5722' }, '& svg': { marginRight: 1, transition: 'color 0.3s ease' } }}>
                             <FaGithub />
                             <Typography sx={{ fontSize: 12 }}>
                                 Ver código no Github

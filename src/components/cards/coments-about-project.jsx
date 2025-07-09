@@ -9,7 +9,7 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io"
 import { IoIosCloseCircleOutline } from "react-icons/io"
 import Tooltip from '@mui/material/Tooltip'
 import { useDispatch, useSelector } from 'react-redux'
-import { addComment, deleteComment, getComments, updateComment } from '../../redux/commentsSlice'
+import { addComment, deleteComment,fetchCommentsTotal,getComments, updateComment } from '../../redux/commentsSlice'
 import { setModalOpen } from '../../redux/authSlice'
 import { MdDeleteOutline } from "react-icons/md"
 import { RiEditLine } from "react-icons/ri"
@@ -26,6 +26,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
             dispatch(getComments(project.id))
         }
     }, [dispatch, project?.id])
+
 
     const [showCommentBox, setShowCommentBox] = useState(false)
     const [comment, setComment] = useState('')
@@ -91,7 +92,6 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
         setLoading(true)
         try {
             await dispatch(updateComment({ comment_id: editingCommentId, updatedComment: editedText }))
-            await dispatch(getComments(project.id)) 
             setEditingCommentId(null)
             setEditedText('')
         } catch (error) {
@@ -112,6 +112,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
     const handleDeleteComment = async (comment_id) => {
         try {
             await dispatch(deleteComment(comment_id))
+            await dispatch(fetchCommentsTotal(project.id)) 
         } catch (error) {
             console.error('Erro ao excluir comentário:', error)
         }
@@ -123,6 +124,10 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
 
     const isUserCommentOwner = (commentUserId) =>
         user?.id?.toString() === commentUserId?.toString()
+
+  
+
+
 
     return (
         <Card sx={{ maxWidth: 400, border: '1px solid #ccc', borderTopRightRadius: 3, borderTopLeftRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }} >

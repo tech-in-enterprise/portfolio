@@ -4,7 +4,7 @@ import { supabase } from '../services/supabase'
 // Async thunk para criar um comentário
 export const addComment = createAsyncThunk(
   'comments/addComment',
-  async (commentData, { rejectWithValue }) => {
+  async (commentData, { rejectWithValue, dispatch }) => {
     const { user_id, project_id, comment } = commentData
 
     try {
@@ -18,6 +18,9 @@ export const addComment = createAsyncThunk(
         return rejectWithValue(error.message)
       }
 
+      // 👉 Atualiza o contador logo após adicionar
+      dispatch(fetchCommentsTotal(project_id))
+
       return data
     } catch (err) {
       console.error('Erro inesperado:', err)
@@ -25,6 +28,7 @@ export const addComment = createAsyncThunk(
     }
   }
 )
+
 
 // Async thunk para buscar comentários de um projeto específico
 export const getComments = createAsyncThunk(
@@ -56,27 +60,29 @@ export const getComments = createAsyncThunk(
 )
 
 //total de comentários de um projeto
-export const fetchCommentsCount = createAsyncThunk(
-  'comments/fetchCommentsCount',
+export const fetchCommentsTotal = createAsyncThunk(
+  'comments/fetchCommentsTotal',
   async (project_id, { rejectWithValue }) => {
+
     try {
-      const { count, error } = await supabase
+      const { data, error, count } = await supabase
         .from('comments')
-        .select('*', { count: 'exact' })
+        .select('id', { count: 'exact', head: true }) 
         .eq('project_id', project_id)
 
       if (error) {
-        console.error('Erro ao contar comentários:', error)
+        console.error('Erro ao buscar total de comentários:', error)
         return rejectWithValue(error.message)
       }
 
-      return count || 0
+      return { project_id, total: count || 0 }
     } catch (err) {
-      console.error('Erro inesperado ao contar comentários:', err)
+      console.error('Erro inesperado ao buscar total de comentários:', err)
       return rejectWithValue(err.message)
     }
   }
 )
+
 
 // Async thunk para atualizar um comentário
 export const updateComment = createAsyncThunk(
@@ -138,7 +144,7 @@ const commentsSlice = createSlice({
     comments: [],
     loading: false,
     error: null,
-    commentsCount: 0,
+    commentsCount: {},
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -149,7 +155,10 @@ const commentsSlice = createSlice({
       })
       .addCase(addComment.fulfilled, (state, action) => {
         state.loading = false
-        state.comments.push(...action.payload)
+        if (action.payload && action.payload.length > 0) {
+          // Adiciona o comentário recém-criado no início da lista
+          state.comments.unshift(action.payload[0])
+        }
       })
       .addCase(addComment.rejected, (state, action) => {
         state.loading = false
@@ -169,9 +178,11 @@ const commentsSlice = createSlice({
         state.error = action.payload
       })
       //para pegar total de comentários
-      .addCase(fetchCommentsCount.fulfilled, (state, action) => {
-        state.commentsCount = action.payload
+      .addCase(fetchCommentsTotal.fulfilled, (state, action) => {
+        const { project_id, total } = action.payload
+        state.commentsCount[project_id] = total
       })
+
       // Atualizar comentário
       .addCase(updateComment.pending, (state) => {
         state.loading = true
@@ -179,7 +190,7 @@ const commentsSlice = createSlice({
       })
       .addCase(updateComment.fulfilled, (state, action) => {
         state.loading = false
-        if (!action.payload) return // evita erro
+        if (!action.payload) return 
         const index = state.comments.findIndex(c => c.id === action.payload.id)
         if (index !== -1) {
           state.comments[index] = action.payload
