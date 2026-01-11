@@ -9,66 +9,87 @@ export default function Authentication() {
   const dispatch = useDispatch()
   const { isModalOpen, isLoginMode } = useSelector((state) => state.auth)
 
-  // Adiciona username no estado
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-   const handleSubmit = async () => {
+  // 1. Tradutor de Erros Profissional (Não exibe erros de banco)
+  const translateError = (err) => {
+    const message = err.message || ''
+    if (message.includes('Invalid login credentials')) return 'E-mail ou senha incorretos.'
+    if (message.includes('User already registered')) return 'Este e-mail já está cadastrado.'
+    if (message.includes('Password should be')) return 'A senha deve ter pelo menos 6 caracteres.'
+    if (message.includes('network error')) return 'Erro de conexão. Verifique sua internet.'
+    return 'Ocorreu um erro inesperado. Tente novamente mais tarde.'
+  }
+
+  // 2. Função Específica de Login
+  const handleSignIn = async () => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw error
+    return data.user
+  }
+
+  // 3. Função Específica de Cadastro
+  const handleSignUp = async () => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { username } } // Metadata para a trigger
+    })
+    
+    if (error) throw error
+
+    // Insere o perfil manualmente (Caso não tenha Trigger ativa no Supabase)
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .insert([{ id: data.user.id, username }])
+    
+    if (profileError && !profileError.message.includes('duplicate key')) {
+      throw profileError
+    }
+
+    return data.user
+  }
+
+  // 4. Função Orquestradora
+  const handleSubmit = async () => {
     setLoading(true)
     setError(null)
 
     try {
       if (!email || !password || (!isLoginMode && !username)) {
-        setError('Todos os campos são obrigatórios.')
-        setLoading(false)
-        return
+        throw new Error('Preencha todos os campos obrigatórios.')
       }
 
-      let user
+      // Executa Login ou Cadastro
+      const user = isLoginMode ? await handleSignIn() : await handleSignUp()
 
-      if (isLoginMode) {
-        // Login
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-        if (error) throw error
-        user = data.user
-      } else {
-        // Cadastro
-        const { data, error } = await supabase.auth.signUp({ email, password })
-        if (error) throw error
-        user = data.user
-
-        // Insere username na tabela profiles
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([{ id: user.id, username }])
-        if (profileError) throw profileError
-      }
-
-      // Aqui: busca o username na tabela profiles (para login e cadastro)
-      const { data: profile, error: profileError } = await supabase
+      // Busca dados do Perfil (Username) para o Redux
+      const { data: profile } = await supabase
         .from('profiles')
         .select('username')
         .eq('id', user.id)
         .single()
 
-      if (profileError) throw profileError
-
-      // Junta user com username do profile
       const userWithUsername = {
         ...user,
-        username: profile?.username || null,
+        username: profile?.username || username || 'Usuário',
       }
 
+      // Finaliza processo de autenticação
       dispatch(setUser(userWithUsername))
       localStorage.setItem('authUser', JSON.stringify(userWithUsername))
-
-      alert(isLoginMode ? 'Login realizado com sucesso!' : 'Cadastro realizado com sucesso!')
+      
       dispatch(setModalOpen(false))
-    } catch (error) {
-      setError(error.message)
+      alert(isLoginMode ? 'Bem-vindo de volta!' : 'Cadastro realizado com sucesso!')
+
+    } catch (err) {
+      // Exibe apenas a mensagem tratada, escondendo logs técnicos do banco
+      setError(translateError(err))
+      console.error('Auth Error Log:', err) // Mantém no console para o dev, mas não para o user
     } finally {
       setLoading(false)
     }
@@ -117,26 +138,29 @@ export default function Authentication() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        
         {error && (
-          <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+          <Typography color="error" variant="body2" sx={{ mt: 1, textAlign: 'center' }}>
             {error}
           </Typography>
         )}
+
         <Button
           fullWidth
           variant="contained"
-          sx={{ background: '#ff5722', borderColor: '#ff5722' }}
+          sx={{ mt: 2, background: '#ff5722', borderColor: '#ff5722', '&:hover': { background: '#e64a19' } }}
           onClick={handleSubmit}
           disabled={loading}
         >
           {loading ? 'Carregando...' : isLoginMode ? 'Entrar' : 'Cadastrar'}
         </Button>
-        <Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+
+        <Box sx={{ display: 'flex', flexDirection: 'row-reverse', mt: 2 }}>
           <Typography
             component="div"
             sx={{
-              mt: 1,
               fontSize: 12,
+              cursor: 'pointer',
               '& .highlight': { color: '#ff5722' },
               '&:hover .highlight': { textDecoration: 'underline' },
             }}
@@ -144,11 +168,11 @@ export default function Authentication() {
           >
             {isLoginMode ? (
               <Box>
-                Não possui conta? <span className="highlight" style={{ cursor: 'pointer' }}>Cadastre-se</span>
+                Não possui conta? <span className="highlight">Cadastre-se</span>
               </Box>
             ) : (
               <Box>
-                Já possui conta? Faça <span className="highlight" style={{ cursor: 'pointer' }}>login</span>
+                Já possui conta? Faça <span className="highlight">login</span>
               </Box>
             )}
           </Typography>

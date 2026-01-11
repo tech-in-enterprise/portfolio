@@ -73,7 +73,7 @@ export default function ProjectPosterCard() {
     async function fetchVideoUrl() {
       const { data, error } = supabase.storage
         .from('videos')
-        .getPublicUrl('conciergevirtual.mp4');
+        .getPublicUrl('conciergevirtual.mp4')
       if (error) {
         console.error('Erro ao obter URL do vídeo:', error.message)
       } else {
