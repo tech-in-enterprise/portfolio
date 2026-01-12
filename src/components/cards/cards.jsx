@@ -109,7 +109,7 @@ export default function ProjectPosterCard() {
               ) : (
                 <div style={{ height: 500, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                   {project.video_url ? (
-                    <video autoPlay muted loop width="100%" height="100%" style={{ objectFit: 'cover' }}>
+                    <video autoPlay muted loop playsInline disablePictureInPicture width="100%" height="100%" style={{ objectFit: 'cover', pointerEvents: 'none' }}>
                       <source src={project.video_url} type="video/mp4" />
                       Seu navegador não suporta o elemento de vídeo.
                     </video>

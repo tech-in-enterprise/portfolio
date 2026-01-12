@@ -9,7 +9,7 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io"
 import { IoIosCloseCircleOutline } from "react-icons/io"
 import Tooltip from '@mui/material/Tooltip'
 import { useDispatch, useSelector } from 'react-redux'
-import { addComment, deleteComment,fetchCommentsTotal,getComments, updateComment } from '../../redux/commentsSlice'
+import { addComment, deleteComment, fetchCommentsTotal, getComments, updateComment } from '../../redux/commentsSlice'
 import { setModalOpen } from '../../redux/authSlice'
 import { MdDeleteOutline } from "react-icons/md"
 import { RiEditLine } from "react-icons/ri"
@@ -22,8 +22,11 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
 
 
     useEffect(() => {
+        console.log("ID do Projeto recebido:", project?.id); // Verifique se o ID chega
         if (project?.id) {
-            dispatch(getComments(project.id))
+            dispatch(getComments(project.id)).then((res) => {
+                console.log("Resultado do GetComments:", res.payload); // Verifique se o banco retorna algo
+            });
         }
     }, [dispatch, project?.id])
 
@@ -112,7 +115,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
     const handleDeleteComment = async (comment_id) => {
         try {
             await dispatch(deleteComment(comment_id))
-            await dispatch(fetchCommentsTotal(project.id)) 
+            await dispatch(fetchCommentsTotal(project.id))
         } catch (error) {
             console.error('Erro ao excluir comentário:', error)
         }
@@ -125,7 +128,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
     const isUserCommentOwner = (commentUserId) =>
         user?.id?.toString() === commentUserId?.toString()
 
-  
+
 
 
 

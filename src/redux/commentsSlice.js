@@ -11,19 +11,19 @@ export const addComment = createAsyncThunk(
       const { data, error } = await supabase
         .from('comments')
         .insert([{ user_id, project_id, comment }])
-        .select()
+        .select(`*, 
+          profiles (
+            id,
+            username
+          )
+        `) // Adicione este select igual ao do getComments
+        .single() // Como é apenas um, usamos .single()
 
-      if (error) {
-        console.error('Erro ao inserir comentário no Supabase:', error)
-        return rejectWithValue(error.message)
-      }
+      if (error) return rejectWithValue(error.message)
 
-      // 👉 Atualiza o contador logo após adicionar
       dispatch(fetchCommentsTotal(project_id))
-
       return data
     } catch (err) {
-      console.error('Erro inesperado:', err)
       return rejectWithValue(err.message)
     }
   }
