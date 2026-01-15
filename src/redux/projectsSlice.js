@@ -4,14 +4,15 @@ import { supabase } from '../services/supabase'
 // Thunk para buscar os projetos do banco de dados
 export const fetchProjects = createAsyncThunk('projects/fetchProjects', async (_, { rejectWithValue }) => {
   try {
-    const { data, error } = await supabase.from('projects').select('*, favorites (id)')
+    const { data, error } = await supabase.from('projects').select('*, favorites (id), profiles (username, avatar_url)')
     if (error) {
       console.error('Erro ao buscar projetos:', error.message)
       throw error
     }
     const projectsWithFavorites = data.map((project) => ({
       ...project,
-      totalFavorites: project.favorites?.length
+      totalFavorites: project.favorites?.length,
+      author: project.profiles
     }))
     return projectsWithFavorites
   }
@@ -20,6 +21,7 @@ export const fetchProjects = createAsyncThunk('projects/fetchProjects', async (_
   }
 
 })
+
 
 const projectsSlice = createSlice({
   name: 'projects',

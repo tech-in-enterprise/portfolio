@@ -10,8 +10,7 @@ import { fetchProjects } from '../../redux/projectsSlice'
 import AboutProject from './about-project'
 import ComentsAboutProject from './coments-about-project'
 import { fetchCommentsTotal } from '../../redux/commentsSlice'
-
-
+import Avatar from '@mui/material/Avatar'
 
 
 export default function ProjectPosterCard() {
@@ -23,6 +22,7 @@ export default function ProjectPosterCard() {
 
   const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.user)
+  const profile = useSelector((state) => state.auth.profile)
   const projects = useSelector((state) => state.projects.projects)
   const favorites = useSelector(state => state.favorites.items)
   const commentsCount = useSelector((state) => state.comments.commentsCount)
@@ -120,6 +120,15 @@ export default function ProjectPosterCard() {
               )}
 
               <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb:1}}>
+                    <Avatar src={project.author?.avatar_url} sx={{ width: 32, height: 32, border: '1px solid #dbdbdb' }}>
+                      {/* Fallback: primeira letra do nome se não houver foto */}
+                      {project.author?.username?.charAt(0).toUpperCase()}
+                    </Avatar>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#262626' }}>
+                      {project.author?.username || 'Usuário'}
+                    </Typography>
+                  </Box>
                 <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
                   <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', color: '#000000' }}>
                     {project.name}
