@@ -114,7 +114,7 @@ export default function Authentication() {
       >
         <HighlightOffIcon
           onClick={() => dispatch(setModalOpen(false))}
-          sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', '&:hover': { color: 'red' } }}
+          sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', '&:hover': { color: 'var(--color-orange)' } }}
         />
         <Typography variant="h6" component="h2">
           {isLoginMode ? 'Login' : 'Cadastre-se'}
@@ -148,7 +148,7 @@ export default function Authentication() {
         <Button
           fullWidth
           variant="contained"
-          sx={{ mt: 2, background: '#ff5722', borderColor: '#ff5722', '&:hover': { background: '#e64a19' } }}
+          sx={{ mt: 2, background: 'var(--color-orange)', borderColor: 'var(--color-orange)', '&:hover': { background: 'var(--color-orange)' } }}
           onClick={handleSubmit}
           disabled={loading}
         >
@@ -161,7 +161,7 @@ export default function Authentication() {
             sx={{
               fontSize: 12,
               cursor: 'pointer',
-              '& .highlight': { color: '#ff5722' },
+              '& .highlight': { color: 'var(--color-orange)' },
               '&:hover .highlight': { textDecoration: 'underline' },
             }}
             onClick={() => dispatch(toggleLoginMode())}

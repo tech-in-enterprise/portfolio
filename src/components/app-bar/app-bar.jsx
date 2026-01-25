@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { AppBar, Box, Toolbar, Typography, Button, Paper, BottomNavigation, BottomNavigationAction, Avatar } from '@mui/material'
 import { Home, Folder, Person, WorkspacePremium } from '@mui/icons-material'
 import { useSelector, useDispatch } from 'react-redux'
-import { CiUser } from "react-icons/ci"
 import DropdownAppBar from './drop-down'
 
 
@@ -14,6 +13,7 @@ export default function SuperiorMenu() {
   const user = useSelector((state) => state.auth.user)
   const profile = useSelector((state) => state.auth.profile)
   const [bottomNavValue, setBottomNavValue] = useState(0)
+
 
   const getIcon = (item) => {
     switch (item) {

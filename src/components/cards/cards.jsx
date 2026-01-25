@@ -97,11 +97,11 @@ export default function ProjectPosterCard() {
   const handleCloseComments = () => setShowComments(false)
 
   return (
-    <Box sx={{ padding: 2 }}>
+    <Box sx={{ padding: 2, mb:2 }}>
       <Grid container spacing={2}>
         {projects.map((project) => (
           <Grid item xs={12} sm={6} md={4} key={project.id}>
-            <Card key={project.id} sx={{ maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }}>
+            <Card key={project.id} sx={{maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }}>
               {showComments ? (
                 <ComentsAboutProject project={project} handleCloseComments={handleCloseComments} />
               ) : showText ? (

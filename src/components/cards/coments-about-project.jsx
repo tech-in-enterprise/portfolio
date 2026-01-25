@@ -135,7 +135,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
             <Box sx={{ position: 'relative', height: 470, background: '#121212' }}>
                 <HighlightOffIcon onClick={handleCloseComments} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#ffffff', '&:hover': { color: '#ff5722' } }} />
                 <CardContent>
-                    <Typography variant="h6" sx={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold' }}>
+                    <Typography variant="h6" sx={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold', mb: 2 }}>
                         Comentários do Projeto
                     </Typography>
 

@@ -13,7 +13,6 @@ import customTheme from '../../styles/theme'
 
 
 export default function Home() {
-
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -34,16 +33,21 @@ export default function Home() {
 
     return (
         <ThemeProvider theme={customTheme}>
-            <Box>
-                <CssBaseline />
-                <SuperiorMenu />
-                <Toolbar />
-                <Title title="PROJETOS"/>
+            <CssBaseline />
+
+            <SuperiorMenu />
+
+            <Toolbar />
+            {/* CONTEÚDO ROLÁVEL */}
+            <Box component="main">
                 <ProjectPosterCard />
                 <Authentication />
+
+                {/* Spacer do BottomNavigation (somente mobile) */}
+                <Toolbar sx={{ display: { xs: 'block', sm: 'none' } }} />
             </Box>
         </ThemeProvider>
-
     )
 }
+
 
