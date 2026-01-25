@@ -107,7 +107,7 @@ export default function ProjectPosterCard() {
               ) : showText ? (
                 <AboutProject handleResetInfoClick={handleResetInfoClick} />
               ) : (
-                <div style={{ height: 500, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+                <div style={{ height: 470, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                   {project.video_url ? (
                     <video autoPlay muted loop playsInline disablePictureInPicture width="100%" height="100%" style={{ objectFit: 'cover', pointerEvents: 'none' }}>
                       <source src={project.video_url} type="video/mp4" />

@@ -22,11 +22,9 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
 
 
     useEffect(() => {
-        console.log("ID do Projeto recebido:", project?.id); // Verifique se o ID chega
         if (project?.id) {
             dispatch(getComments(project.id)).then((res) => {
-                console.log("Resultado do GetComments:", res.payload); // Verifique se o banco retorna algo
-            });
+            })
         }
     }, [dispatch, project?.id])
 
@@ -134,7 +132,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
 
     return (
         <Card sx={{ maxWidth: 400, border: '1px solid #ccc', borderTopRightRadius: 3, borderTopLeftRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }} >
-            <Box sx={{ position: 'relative', height: 500, background: '#121212' }}>
+            <Box sx={{ position: 'relative', height: 470, background: '#121212' }}>
                 <HighlightOffIcon onClick={handleCloseComments} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#ffffff', '&:hover': { color: '#ff5722' } }} />
                 <CardContent>
                     <Typography variant="h6" sx={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold' }}>

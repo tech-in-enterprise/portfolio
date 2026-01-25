@@ -15,7 +15,7 @@ export default function AboutProject({ handleResetInfoClick }) {
     return (
         <React.Fragment>
             <Card sx={{ maxWidth: 400, border: '1px solid #ccc', borderTopRightRadius: 3, borderTopLeftRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }}>
-                <Box sx={{ position: 'relative', height: 500, background: '#121212' }}>
+                <Box sx={{ position: 'relative', height: 470, background: '#121212' }}>
                     <HighlightOffIcon onClick={handleResetInfoClick} sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', color: '#ffffff', '&:hover': { color: '#ff5722' } }} />
                     <CardContent sx={{ textAlign: 'center' }}>
                         <Typography variant="h6" sx={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold' }}>

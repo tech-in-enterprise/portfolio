@@ -16,8 +16,8 @@ export const addComment = createAsyncThunk(
             id,
             username
           )
-        `) // Adicione este select igual ao do getComments
-        .single() // Como é apenas um, usamos .single()
+        `) 
+        .single() 
 
       if (error) return rejectWithValue(error.message)
 
