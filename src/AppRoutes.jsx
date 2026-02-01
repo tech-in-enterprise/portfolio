@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Authentication from "./components/Auth/auth"
 import Home from "./pages/home/home"
 import Certificates from "./components/cards/certificates"
-import Projects from "./components/cards/Projects"
 import AppLayout from "./pages/global-layout"
+import Projects from "./components/cards/projects"
 
 
 
