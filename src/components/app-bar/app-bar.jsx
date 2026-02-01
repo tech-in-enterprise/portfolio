@@ -1,25 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AppBar, Box, Toolbar, Typography, Button, Paper, BottomNavigation, BottomNavigationAction, Avatar } from '@mui/material'
 import { Home, Folder, Person, WorkspacePremium } from '@mui/icons-material'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate, useLocation } from 'react-router-dom'
 import DropdownAppBar from './drop-down'
 
 
-const navItems = ['Home', 'Projetos', 'Sobre mim', 'Certificados']
+const navItems = [
+  { label: 'Home', path: '/' },
+  { label: 'Projetos', path: '/projects' },
+  { label: 'Certificados', path: '/certificates' }
+]
 
 export default function SuperiorMenu() {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+
   const user = useSelector((state) => state.auth.user)
   const profile = useSelector((state) => state.auth.profile)
-  const [bottomNavValue, setBottomNavValue] = useState(0)
+
+  const [bottomNavValue, setBottomNavValue] = useState(location.pathname)
+
+
+  useEffect(() => {
+    setBottomNavValue(location.pathname)
+  }, [location.pathname])
 
 
   const getIcon = (item) => {
     switch (item) {
       case 'Home': return <Home />
       case 'Projetos': return <Folder />
-      case 'Sobre mim': return <Person />
       case 'Certificados': return <WorkspacePremium />
       default: return <Home />
     }
@@ -49,11 +63,13 @@ export default function SuperiorMenu() {
           </Box>
 
           {/* Nav Items (Apenas Desktop) */}
-          <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexGrow: 1, justifyContent: 'flex-end', mr: 2}}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: 'var(--color-white)', fontWeight: 'bold' }}>{item}</Button>
-            ))}
-          </Box>
+          {user && (
+            <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexGrow: 1, justifyContent: 'flex-end', mr: 2 }}>
+              {navItems.map((item) => (
+                <Button key={item.path} onClick={() => navigate(item.path)} sx={{ color: location.pathname === item.path ? 'var(--color-orange)' : 'var(--color-white)', fontWeight: 'bold' }}>{item.label}</Button>
+              ))}
+            </Box>
+          )}
 
           {/* LADO DIREITO: DropdownAppBar (Desktop e Mobile) */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -84,23 +100,32 @@ export default function SuperiorMenu() {
       </AppBar>
 
       {/* Menu Bottom (Apenas Mobile) */}
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, display: { xs: 'block', sm: 'none' }, zIndex: 1100 }}>
-        <BottomNavigation
-          showLabels
-          value={bottomNavValue}
-          onChange={(e, val) => setBottomNavValue(val)}
-          sx={{ backgroundColor: 'var(--background-dark)' }}
-        >
-          {navItems.map((item) => (
-            <BottomNavigationAction
-              key={item}
-              label={item}
-              icon={getIcon(item)}
-              sx={{ color: 'var(--color-text-inactive)', '&.Mui-selected': { color: 'var(--color-orange)' } }}
-            />
-          ))}
-        </BottomNavigation>
-      </Paper>
+      {user && (
+        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, display: { xs: 'block', sm: 'none' }, zIndex: 1100 }}>
+          <BottomNavigation
+            showLabels
+            value={bottomNavValue}
+            onChange={(e, val) => {
+              setBottomNavValue(val)
+              navigate(val)
+            }}
+            sx={{ backgroundColor: 'var(--background-dark)' }}
+          >
+            {navItems.map((item) => (
+              <BottomNavigationAction
+                key={item.path}
+                label={item.label}
+                value={item.path}
+                icon={getIcon(item.label)}
+                sx={{
+                  color: 'var(--color-text-inactive)',
+                  '&.Mui-selected': { color: 'var(--color-orange)' }
+                }}
+              />
+            ))}
+          </BottomNavigation>
+        </Paper>
+      )}
     </Box>
   )
 }

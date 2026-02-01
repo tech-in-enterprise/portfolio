@@ -98,20 +98,7 @@ export default function Authentication() {
   return (
     <Modal open={isModalOpen} onClose={() => dispatch(setModalOpen(false))}>
       <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: { xs: '80%', sm: 400 },
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 3,
-          maxHeight: '90vh',
-          overflowY: 'auto',
-        }}
-      >
+        sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: { xs: '80%', sm: 400 }, bgcolor: 'background.paper', boxShadow: 'var(--box-shadow)', p: 4, borderRadius: 3, maxHeight: '90vh', overflowY: 'auto',}}>
         <HighlightOffIcon
           onClick={() => dispatch(setModalOpen(false))}
           sx={{ position: 'absolute', top: 5, right: 5, fontSize: '1.2rem', cursor: 'pointer', '&:hover': { color: 'var(--color-orange)' } }}

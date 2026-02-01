@@ -101,7 +101,7 @@ export default function ProjectPosterCard() {
       <Grid container spacing={2}>
         {projects.map((project) => (
           <Grid item xs={12} sm={6} md={4} key={project.id}>
-            <Card key={project.id} sx={{maxWidth: 400, border: '1px solid #ccc', borderRadius: 3, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', backgroundColor: '#FFFFFF', overflow: 'hidden', position: 'relative' }}>
+            <Card key={project.id} sx={{maxWidth: 400, border: '1px solid #dbdbdb', borderRadius: 3, boxShadow: 'var(--box-shadow)', backgroundColor: 'var(--background-white)', overflow: 'hidden', position: 'relative' }}>
               {showComments ? (
                 <ComentsAboutProject project={project} handleCloseComments={handleCloseComments} />
               ) : showText ? (
@@ -114,23 +114,23 @@ export default function ProjectPosterCard() {
                       Seu navegador não suporta o elemento de vídeo.
                     </video>
                   ) : (
-                    <Typography sx={{ color: '#000000' }}>Carregando vídeo...</Typography>
+                    <Typography sx={{ color: 'var(--color-dark)' }}>Carregando vídeo...</Typography>
                   )}
                 </div>
               )}
 
               <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb:1}}>
-                    <Avatar src={project.author?.avatar_url} sx={{ width: 32, height: 32, border: '1px solid #dbdbdb' }}>
+                    <Avatar src={project.author?.avatar_url} sx={{ width: 32, height: 32, border: '1px solid var(--color-gray-easy)' }}>
                       {/* Fallback: primeira letra do nome se não houver foto */}
                       {project.author?.username?.charAt(0).toUpperCase()}
                     </Avatar>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#262626' }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'var(--color-black-matte)' }}>
                       {project.author?.username || 'Usuário'}
                     </Typography>
                   </Box>
                 <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-                  <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', color: '#000000' }}>
+                  <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold',  color: 'var(--color-dark)' }}>
                     {project.name}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -138,10 +138,10 @@ export default function ProjectPosterCard() {
                       <>
                         <FaStar
                           onClick={() => handleFavoriteClick(project.id)}
-                          style={{ color: '#ff5722', fontSize: 20, marginRight: 4, cursor: 'pointer' }}
+                          style={{ color: 'var(--color-orange)', fontSize: 20, marginRight: 4, cursor: 'pointer' }}
                         />
                         {project.totalFavorites > 0 && (
-                          <Typography variant="body2" sx={{ color: '#000', mr: 1 }}>
+                          <Typography variant="body2" sx={{  color: 'var(--color-dark)', mr: 1 }}>
                             {project.totalFavorites}
                           </Typography>
                         )}
@@ -150,16 +150,16 @@ export default function ProjectPosterCard() {
                       <>
                         <FaRegStar
                           onClick={() => handleFavoriteClick(project.id)}
-                          style={{ color: '#ff5722', fontSize: 20, marginRight: 4, cursor: 'pointer', }}
+                          style={{ color: 'var(--color-orange)', fontSize: 20, marginRight: 4, cursor: 'pointer', }}
                         />
                         {project.totalFavorites > 0 && (
-                          <Typography variant="body2" sx={{ color: '#000', mr: 1 }}>
+                          <Typography variant="body2" sx={{ color: 'var(--color-dark)', mr: 1 }}>
                             {project.totalFavorites}
                           </Typography>
                         )}
                       </>
                     )}
-                    <IoChatbubbleEllipsesOutline onClick={() => handleCommentsClick(project.id)} style={{ color: '#ff5722', fontSize: 20, marginRight: 4, cursor: 'pointer', }} />
+                    <IoChatbubbleEllipsesOutline onClick={() => handleCommentsClick(project.id)} style={{ color: 'var(--color-orange)', fontSize: 20, marginRight: 4, cursor: 'pointer', }} />
                     {(commentsCount[project.id] ?? 0) > 0 && (
                       <Typography>{commentsCount[project.id]}</Typography>
                     )}
@@ -171,10 +171,10 @@ export default function ProjectPosterCard() {
                 </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent: 'center' }}>
-                <Button size="large" variant="contained" sx={{ backgroundColor: '#000000', width: '180px' }} onClick={handleInfoClick} >
+                <Button size="large" variant="contained" sx={{ backgroundColor:'var(--background-dark)' , width: '180px' }} onClick={handleInfoClick} >
                   Saiba mais
                 </Button>
-                <Button size="large" variant="outlined" sx={{ borderColor: '#ff5722', color: '#ff5722', width: '180px' }} onClick={() => window.open('https://conciergevirtual.netlify.app/1', '_blank')}>
+                <Button size="large" variant="outlined" sx={{ borderColor: 'var(--color-orange)', color: 'var(--color-orange)', width: '180px' }} onClick={() => window.open('https://conciergevirtual.netlify.app/1', '_blank')}>
                   Ver Projeto
                 </Button>
               </CardActions>
