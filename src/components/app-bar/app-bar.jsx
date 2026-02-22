@@ -4,6 +4,7 @@ import { Home, Folder, Person, WorkspacePremium } from '@mui/icons-material'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import DropdownAppBar from './drop-down'
+import { fetchUserProfile } from '../../redux/authSlice'
 
 
 const navItems = [
@@ -39,6 +40,12 @@ export default function SuperiorMenu() {
     }
   }
 
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchUserProfile(user.id))
+    }
+  }, [user?.id, dispatch])
+
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar component="nav" sx={{ background: 'var(--background-dark)', backgroundImage: 'none' }}>
@@ -52,8 +59,18 @@ export default function SuperiorMenu() {
 
             {user && (
               <Box sx={{ display: { xs: 'flex', sm: 'none' }, alignItems: 'center' }}>
-                <Avatar sx={{ width: 32, height: 32, bgcolor: 'var(--color-orange)', fontSize: '0.85rem', fontWeight: 'bold' }}>
-                  {profile?.username?.charAt(0).toUpperCase() || 'U'}
+                <Avatar
+                  src={profile?.avatar_url || undefined}
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: 'var(--color-orange)',
+                    fontSize: '0.85rem',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {!profile?.avatar_url &&
+                    (profile?.username?.charAt(0).toUpperCase() || 'U')}
                 </Avatar>
                 <Typography variant="body2" sx={{ ml: 0.5, color: 'var(--color-white)', fontWeight: 500 }}>
                   {profile?.username || 'Usuário'}

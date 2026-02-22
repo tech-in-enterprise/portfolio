@@ -2,9 +2,9 @@ import React, { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import Authentication from "./components/Auth/auth"
 import Home from "./pages/home/home"
-import Certificates from "./components/cards/certificates"
+import Certificates from "./components/certificates/certificates"
 import AppLayout from "./pages/global-layout"
-import Projects from "./components/cards/projects"
+import Projects from "./components/cards/generals-components/projects"
 
 
 

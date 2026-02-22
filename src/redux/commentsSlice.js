@@ -16,8 +16,8 @@ export const addComment = createAsyncThunk(
             id,
             username
           )
-        `) 
-        .single() 
+        `)
+        .single()
 
       if (error) return rejectWithValue(error.message)
 
@@ -67,7 +67,7 @@ export const fetchCommentsTotal = createAsyncThunk(
     try {
       const { data, error, count } = await supabase
         .from('comments')
-        .select('id', { count: 'exact', head: true }) 
+        .select('id', { count: 'exact', head: true })
         .eq('project_id', project_id)
 
       if (error) {
@@ -141,7 +141,7 @@ export const deleteComment = createAsyncThunk(
 const commentsSlice = createSlice({
   name: 'comments',
   initialState: {
-    comments: [],
+    commentsByProject: {},
     loading: false,
     error: null,
     commentsCount: {},
@@ -155,10 +155,13 @@ const commentsSlice = createSlice({
       })
       .addCase(addComment.fulfilled, (state, action) => {
         state.loading = false
-        if (action.payload && action.payload.length > 0) {
-          // Adiciona o comentário recém-criado no início da lista
-          state.comments.unshift(action.payload[0])
+        const projectId = action.payload.project_id
+
+        if (!state.commentsByProject[projectId]) {
+          state.commentsByProject[projectId] = []
         }
+
+        state.commentsByProject[projectId].unshift(action.payload)
       })
       .addCase(addComment.rejected, (state, action) => {
         state.loading = false
@@ -171,7 +174,8 @@ const commentsSlice = createSlice({
       })
       .addCase(getComments.fulfilled, (state, action) => {
         state.loading = false
-        state.comments = action.payload
+        const projectId = action.meta.arg
+        state.commentsByProject[projectId] = action.payload
       })
       .addCase(getComments.rejected, (state, action) => {
         state.loading = false
@@ -190,7 +194,7 @@ const commentsSlice = createSlice({
       })
       .addCase(updateComment.fulfilled, (state, action) => {
         state.loading = false
-        if (!action.payload) return 
+        if (!action.payload) return
         const index = state.comments.findIndex(c => c.id === action.payload.id)
         if (index !== -1) {
           state.comments[index] = action.payload
@@ -208,7 +212,12 @@ const commentsSlice = createSlice({
       })
       .addCase(deleteComment.fulfilled, (state, action) => {
         state.loading = false
-        state.comments = state.comments.filter(c => c.id !== action.payload)
+        const deletedId = action.payload
+
+        Object.keys(state.commentsByProject).forEach(projectId => {
+          state.commentsByProject[projectId] =
+            state.commentsByProject[projectId].filter(c => c.id !== deletedId)
+        })
       })
       .addCase(deleteComment.rejected, (state, action) => {
         state.loading = false

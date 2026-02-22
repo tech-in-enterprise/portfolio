@@ -9,15 +9,15 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io"
 import { IoIosCloseCircleOutline } from "react-icons/io"
 import Tooltip from '@mui/material/Tooltip'
 import { useDispatch, useSelector } from 'react-redux'
-import { addComment, deleteComment, fetchCommentsTotal, getComments, updateComment } from '../../redux/commentsSlice'
-import { setModalOpen } from '../../redux/authSlice'
+import { addComment, deleteComment, fetchCommentsTotal, getComments, updateComment } from '../../../redux/commentsSlice'
+import { setModalOpen } from '../../../redux/authSlice'
 import { MdDeleteOutline } from "react-icons/md"
 import { RiEditLine } from "react-icons/ri"
 
 export default function ComentsAboutProject({ project, handleCloseComments }) {
     const dispatch = useDispatch()
     const user = useSelector((state) => state.auth.user)
-    const comments = useSelector((state) => state.comments.comments)
+    const comments = useSelector((state) => state.comments.commentsByProject[project?.id] || [])
     const loadingComments = useSelector((state) => state.comments.loading)
 
 
@@ -143,7 +143,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
                     {showCommentBox && (
                         <>
                             <TextField value={comment} onChange={handleCommentChange} multiline rows={3} placeholder="Escreva seu comentário aqui..." fullWidth variant="outlined" disabled={loading} sx={{
-                                mb: 2, background: 'var(--color-black-matte)' , borderColor: 'var(--color-orange)',
+                                mb: 2, background: 'var(--color-black-matte)', borderColor: 'var(--color-orange)',
                                 '& .MuiInputBase-input': {
                                     color: 'var(--color-white)',
                                     fontSize: 12,
@@ -161,10 +161,10 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
                                 },
                             }} />
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Typography onClick={handleSaveComment} sx={{ color: 'var(--color-white)', '&:hover': { color:'var(--color-orange)'}, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                <Typography onClick={handleSaveComment} sx={{ color: 'var(--color-white)', '&:hover': { color: 'var(--color-orange)' }, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                                     <IoIosCheckmarkCircleOutline size={22} style={{ marginRight: 8 }} />
                                 </Typography>
-                                <Typography onClick={handleCancelComment} sx={{ color: 'var(--color-white)', '&:hover': { color:'var(--color-orange)'}, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                <Typography onClick={handleCancelComment} sx={{ color: 'var(--color-white)', '&:hover': { color: 'var(--color-orange)' }, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                                     <IoIosCloseCircleOutline size={22} style={{ marginRight: 8 }} />
                                 </Typography>
                             </Box>
@@ -193,7 +193,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
                             }}
                         >
                             {comments.map((c) => (
-                                <Box key={c.id} sx={{ mb: 1, p: 1, backgroundColor: 'var(--color-black-matte)' , borderRadius: 1, border: '1px solid var(--color-orange)', }}>
+                                <Box key={c.id} sx={{ mb: 1, p: 1, backgroundColor: 'var(--color-black-matte)', borderRadius: 1, border: '1px solid var(--color-orange)', }}>
                                     <Typography sx={{ color: 'var(--color-orange)', fontWeight: 'bold', fontSize: 14 }}>
                                         {c.profiles?.username || 'Anônimo'}:
                                     </Typography>
@@ -208,7 +208,7 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
                                                 fullWidth
                                                 variant="outlined"
                                                 sx={{
-                                                    background: 'var(--color-black-matte)' ,
+                                                    background: 'var(--color-black-matte)',
                                                     mb: 1,
                                                     '& .MuiInputBase-input': {
                                                         color: 'var(--color-white)',
@@ -230,12 +230,12 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
 
                                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                                                 <Tooltip title="Salvar edição" arrow >
-                                                    <Box sx={{ color: 'var(--color-white)', '&:hover': { color:'var(--color-orange)'} }}>
+                                                    <Box sx={{ color: 'var(--color-white)', '&:hover': { color: 'var(--color-orange)' } }}>
                                                         <IoIosCheckmarkCircleOutline onClick={handleSaveEditedComment} />
                                                     </Box>
                                                 </Tooltip>
                                                 <Tooltip title="Cancelar edição" arrow>
-                                                    <Box sx={{ color: 'var(--color-white)', '&:hover': { color:'var(--color-orange)'} }}>
+                                                    <Box sx={{ color: 'var(--color-white)', '&:hover': { color: 'var(--color-orange)' } }}>
                                                         <IoIosCloseCircleOutline onClick={handleCancelEdit} />
                                                     </Box>
                                                 </Tooltip>
@@ -249,13 +249,13 @@ export default function ComentsAboutProject({ project, handleCloseComments }) {
                                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, color: 'var(--color-grey-easy)' }}>
                                                     {isUserCommentOwner(c.user_id) && (
                                                         <Tooltip title="Editar comentário" arrow>
-                                                            <Box sx={{ color: 'var(--color-white)', '&:hover': { color:'var(--color-orange)'} }}>
+                                                            <Box sx={{ color: 'var(--color-white)', '&:hover': { color: 'var(--color-orange)' } }}>
                                                                 <RiEditLine onClick={() => handleEditComment(c)} style={{ cursor: 'pointer' }} />
                                                             </Box>
                                                         </Tooltip>
                                                     )}
                                                     <Tooltip title="Deletar comentário" arrow>
-                                                        <Box sx={{ color: 'var(--color-white)', '&:hover': { color:'var(--color-orange)'} }}>
+                                                        <Box sx={{ color: 'var(--color-white)', '&:hover': { color: 'var(--color-orange)' } }}>
                                                             <MdDeleteOutline onClick={() => handleDeleteComment(c.id)} style={{ cursor: 'pointer' }} />
                                                         </Box>
                                                     </Tooltip>
