@@ -58,7 +58,7 @@ export default function ProjectCardItem({ project, isFavorite, commentsCount }) 
         ) : (
           <Box sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#000' }}>
             {project.video_url ? (
-              <video autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
+              <video autoPlay muted loop playsInline disablePictureInPicture   style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
                 <source src={project.video_url} type="video/mp4" />
               </video>
             ) : (
@@ -113,7 +113,7 @@ export default function ProjectCardItem({ project, isFavorite, commentsCount }) 
         </Typography>
       </CardContent>
 
-      <CardActions sx={{ justifyContent: 'center', pb: 2 }}>
+      <CardActions sx={{ justifyContent: 'space-around', pb: 2 }}>
         <Button 
           size="large" 
           variant="contained" 

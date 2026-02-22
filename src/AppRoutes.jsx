@@ -4,7 +4,7 @@ import Authentication from "./components/Auth/auth"
 import Home from "./pages/home/home"
 import Certificates from "./components/certificates/certificates"
 import AppLayout from "./pages/global-layout"
-import Projects from "./components/cards/generals-components/projects"
+import MyProjects from "./components/cards/generals-components/myprojects"
 
 
 
@@ -17,7 +17,7 @@ export default function AppRoutes() {
                 {/* ROTAS COM MENU */}
                 <Route element={<AppLayout/>}>
                     <Route path="/" element={<Home />} />
-                    <Route path="/projects" element={<Projects/>} />
+                    <Route path="/my-projects" element={<MyProjects/>} />
                     <Route path="/certificates" element={<Certificates />} />
                 </Route>
 

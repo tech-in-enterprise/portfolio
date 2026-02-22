@@ -3,7 +3,7 @@ import { Box, Grid} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProjects } from '../../redux/projectsSlice'
 import { fetchCommentsTotal } from '../../redux/commentsSlice'
-import ProjectCardItem from './generals-components/projects'
+import ProjectCardItem from './generals-components/all-projects-feed-home'
 import { fetchFavorites } from '../../redux/favoritesSlice'
 
 
