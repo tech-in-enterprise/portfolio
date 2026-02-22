@@ -8,7 +8,7 @@ import { fetchUserProfile } from '../../redux/authSlice'
 
 
 const navItems = [
-  { label: 'Home', path: '/' },
+  { label: 'Feed', path: '/' },
   { label: 'Projetos', path: '/my-projects' },
   { label: 'Certificados', path: '/certificates' }
 ]
